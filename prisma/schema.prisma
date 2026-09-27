@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Casa de Hogwarts. O nome não pode repetir.
+// wizards = a lista de bruxos dessa casa.
+model House {
+  id      Int      @id @default(autoincrement())
+  nome    String   @unique
+  wizards Wizard[]
+}
+
+// Bruxo. Cada um pertence a uma casa.
+// houseId é o número da casa. O Prisma preenche isso sozinho
+// quando você liga o bruxo com house: { connect: { nome: "..." } }.
+model Wizard {
+  id             Int      @id @default(autoincrement())
+  nome           String
+  sobrenome      String
+  dataNascimento DateTime @db.Date
+  house          House    @relation(fields: [houseId], references: [id])
+  houseId        Int
+}
